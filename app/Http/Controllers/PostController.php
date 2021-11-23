@@ -44,10 +44,6 @@ class PostController extends Controller
         try {
             $post = Post::create($requestBody);
 
-            $subscribers = $post->website->subscribers;
-
-            Notification::send($subscribers, new NewPost($post));
-
             return response()->json([
                 'website_id' => $post->website_id,
                 'title' => $post->title,

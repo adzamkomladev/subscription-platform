@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\DB;
 
 class NewPost extends Notification implements ShouldQueue
 {
@@ -41,6 +42,12 @@ class NewPost extends Notification implements ShouldQueue
      */
     public function toMail($notifiable)
     {
+        if (DB::table('deliveries')->where('user_id', $notifiable->id)->where('post_id', $this->post->id)->exists()) {
+            throw new \Exception('Post delivered already!');
+        }
+
+        $this->post->deliveries()->attach($notifiable->id);
+
         return (new MailMessage)
             ->line($this->post->title)
             ->line($this->post->description)
