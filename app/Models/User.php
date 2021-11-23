@@ -53,6 +53,11 @@ class User extends Authenticatable
         );
     }
 
+    public function websites(): BelongsToMany
+    {
+        return $this->subscriptions();
+    }
+
     public function deliveries(): BelongsToMany
     {
         return $this->belongsToMany(
@@ -61,5 +66,10 @@ class User extends Authenticatable
             'user_id',
             'post_id'
         );
+    }
+
+    public function posts(): BelongsToMany
+    {
+        return $this->deliveries();
     }
 }
